@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcard Quiz App</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+    --bg:#0b132b;
+    --card:#1c2541;
+    --pink:#ffb6c1;
+    --pink-dark:#ff8fab;
+    --text:#ffffff;
+    --input:#2a365f;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+/* Beautiful Animated Background */
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    overflow:hidden;
+
+    background:
+    radial-gradient(circle at top left,#ffb6c155 0%,transparent 35%),
+    radial-gradient(circle at bottom right,#ff8fab44 0%,transparent 35%),
+    linear-gradient(135deg,#020617,#0b132b,#1c2541);
+
+    position:relative;
+}
+
+body::before,
+body::after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+    filter:blur(100px);
+    z-index:-1;
+}
+
+body::before{
+    width:350px;
+    height:350px;
+    background:#ff8fab55;
+    top:-100px;
+    left:-100px;
+    animation:float1 10s ease-in-out infinite;
+}
+
+body::after{
+    width:400px;
+    height:400px;
+    background:#5b7cfa33;
+    bottom:-120px;
+    right:-120px;
+    animation:float2 12s ease-in-out infinite;
+}
+
+@font-face {
+    font-family: 'Rustic Roadway';
+    src: url('RusticRoadway.ttf') format('truetype');
+}
+
+@keyframes float1{
+    0%,100%{
+        transform:translate(0,0);
+    }
+    50%{
+        transform:translate(50px,30px);
+    }
+}
+
+@keyframes float2{
+    0%,100%{
+        transform:translate(0,0);
+    }
+    50%{
+        transform:translate(-40px,-30px);
+    }
+}
+
+/* Glass Container */
+
+.container{
+    width:100%;
+    max-width:700px;
+
+    background:rgba(255,255,255,0.06);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,0.15);
+
+    border-radius:25px;
+    padding:35px;
+
+    box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    0 0 20px rgba(255,182,193,0.1);
+}
+
+h1{
+    text-align:center;
+    color:var(--pink);
+    margin-bottom:25px;
+    font-size:2.2rem;
+    font-family:'Rustic Roadway', cursive;
+    letter-spacing:2px;
+}
+
+.counter{
+    text-align:center;
+    color:#d7dfff;
+    margin-bottom:15px;
+    font-size:15px;
+}
+
+/* Flashcard */
+
+.flashcard{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(15px);
+
+    border:1px solid rgba(255,182,193,0.3);
+
+    min-height:220px;
+    border-radius:20px;
+
+    color:white;
+    font-size:1.5rem;
+    font-weight:600;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+
+    padding:30px;
+    margin-bottom:25px;
+
+    transition:0.4s ease;
+    font-family:'Patrick Hand', cursive;
+    font-size:1.5rem;
+}
+
+.flashcard:hover{
+    transform:translateY(-6px);
+    box-shadow:
+    0 0 25px rgba(255,182,193,0.3),
+    0 0 50px rgba(255,182,193,0.15);
+}
+
+/* Buttons */
+
+.buttons{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:25px;
+}
+
+button{
+    padding:12px 20px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:600;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:translateY(-3px) scale(1.03);
+}
+
+.show-btn{
+    background:#ff5d73;
+    color:white;
+}
+
+.nav-btn{
+    background:#ff5d73;
+    color:white;
+}
+
+.delete-btn{
+    background:#ff5d73;
+    color:white;
+}
+
+/* Form */
+
+.form{
+    margin-top:20px;
+}
+
+.form h2{
+    color:var(--pink);
+    margin-bottom:15px;
+}
+
+input{
+    width:100%;
+    padding:13px;
+    margin-bottom:12px;
+
+    border:none;
+    border-radius:10px;
+
+    background:var(--input);
+    color:white;
+    font-size:15px;
+}
+
+input::placeholder{
+    color:#cfd7ff;
+}
+
+.add-btn{
+    width:100%;
+    background:linear-gradient(
+        135deg,
+        var(--pink),
+        var(--pink-dark)
+    );
+    color:#111;
+    font-weight:bold;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>📚 Flashcard Quiz App 📚</h1>
+
+    <div class="counter" id="counter">
+        Card 1 of 3
+    </div>
+
+    <div class="flashcard" id="flashcard">
+        What is HTML?
+    </div>
+
+    <div class="buttons">
+        <button class="show-btn" onclick="toggleAnswer()">
+            Show Answer
+        </button>
+
+        <button class="nav-btn" onclick="prevCard()">
+            ⬅ Previous
+        </button>
+
+        <button class="nav-btn" onclick="nextCard()">
+            Next ➡
+        </button>
+
+        <button class="nav-btn" onclick="editCard()">
+            ✏ Edit
+        </button>
+
+        <button class="delete-btn" onclick="deleteCard()">
+            🗑 Delete
+        </button>
+    </div>
+
+    <div class="form">
+        <h2>Add New Flashcard</h2>
+
+        <input
+            type="text"
+            id="question"
+            placeholder="Enter Question">
+
+        <input
+            type="text"
+            id="answer"
+            placeholder="Enter Answer">
+
+        <button class="add-btn" onclick="addCard()">
+            ➕ Add Flashcard
+        </button>
+    </div>
+
+</div>
+
+<script>
+
+let flashcards = [
+{
+question:"What is HTML?",
+answer:"HTML stands for HyperText Markup Language."
+},
+{
+question:"What is CSS?",
+answer:"CSS is used to style web pages."
+},
+{
+question:"What is JavaScript?",
+answer:"JavaScript adds interactivity to websites."
+}
+];
+
+let currentIndex = 0;
+let showingAnswer = false;
+
+function displayCard(){
+
+const card = document.getElementById("flashcard");
+const counter = document.getElementById("counter");
+
+counter.textContent =
+`Card ${currentIndex + 1} of ${flashcards.length}`;
+
+if(showingAnswer){
+card.textContent = flashcards[currentIndex].answer;
+}else{
+card.textContent = flashcards[currentIndex].question;
+}
+}
+
+function toggleAnswer(){
+
+showingAnswer = !showingAnswer;
+
+const btn = document.querySelector(".show-btn");
+
+btn.textContent =
+showingAnswer
+? "Hide Answer"
+: "Show Answer";
+
+displayCard();
+}
+
+function nextCard(){
+
+if(currentIndex < flashcards.length - 1){
+
+currentIndex++;
+showingAnswer = false;
+
+document.querySelector(".show-btn")
+.textContent = "Show Answer";
+
+displayCard();
+}
+}
+
+function prevCard(){
+
+if(currentIndex > 0){
+
+currentIndex--;
+showingAnswer = false;
+
+document.querySelector(".show-btn")
+.textContent = "Show Answer";
+
+displayCard();
+}
+}
+
+function addCard(){
+
+const question =
+document.getElementById("question")
+.value.trim();
+
+const answer =
+document.getElementById("answer")
+.value.trim();
+
+if(question === "" || answer === ""){
+alert("Please fill both fields.");
+return;
+}
+
+flashcards.push({
+question,
+answer
+});
+
+document.getElementById("question").value="";
+document.getElementById("answer").value="";
+
+alert("Flashcard Added Successfully!");
+
+displayCard();
+}
+function editCard(){
+
+let newQuestion = prompt(
+"Edit Question:",
+flashcards[currentIndex].question
+);
+
+if(newQuestion === null || newQuestion.trim() === ""){
+return;
+}
+
+let newAnswer = prompt(
+"Edit Answer:",
+flashcards[currentIndex].answer
+);
+
+if(newAnswer === null || newAnswer.trim() === ""){
+return;
+}
+
+flashcards[currentIndex].question = newQuestion;
+flashcards[currentIndex].answer = newAnswer;
+
+showingAnswer = false;
+
+document.querySelector(".show-btn")
+.textContent = "Show Answer";
+
+displayCard();
+
+alert("Flashcard Updated Successfully!");
+}
+
+function deleteCard(){
+
+if(flashcards.length === 1){
+alert("At least one flashcard must remain.");
+return;
+}
+
+flashcards.splice(currentIndex,1);
+
+if(currentIndex >= flashcards.length){
+currentIndex = flashcards.length - 1;
+}
+
+showingAnswer = false;
+
+document.querySelector(".show-btn")
+.textContent = "Show Answer";
+
+displayCard();
+}
+
+displayCard();
+
+</script>
+
+</body>
+</html>
