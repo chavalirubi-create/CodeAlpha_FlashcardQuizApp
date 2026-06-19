@@ -1,4 +1,7 @@
 # Flashcard Quiz App
+
+A simple and interactive Flashcard Quiz App built using HTML, CSS, and JavaScript. The app helps users study and memorize information through digital flashcards with an attractive dark-mode interface.
+
 # Features
 <ul>
 <li>Show and hide answers</li>
