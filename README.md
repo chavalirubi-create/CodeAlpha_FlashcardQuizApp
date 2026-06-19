@@ -1,7 +1,6 @@
-<h2>📚 Flashcard Quiz App</h2>
-<b>Overview</b>
+# Flashcard Quiz App
+# Features
 <ul>
-<li>Features</li>
 <li>Show and hide answers</li>
 <li>Navigate using Previous and Next buttons</li>
 <li>Add new flashcards</li>
